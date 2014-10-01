@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <projectUrl>http://blog.jsgoupil.com/relation-scaffolding-for-mvc/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>Initial Package.</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <tags>EF entity framework admin scaffolding mvc</tags>
+  </metadata>
+  <files>
+    <file src="Views\**\*.*" target="Content\Views" /> 
+  </files>
+</package>

@@ -1,0 +1,7 @@
+﻿@{
+    var modelMetadata = ViewData.ModelMetadata;
+    RelationScaffolding.RelationOne2OneAttribute relationAttribute = modelMetadata.ContainerType.GetMembers().FirstOrDefault(x => x.Name == modelMetadata.PropertyName).GetCustomAttributes(typeof(RelationScaffolding.RelationOne2OneAttribute), false).FirstOrDefault() as RelationScaffolding.RelationOne2OneAttribute;
+    var lookup = new RelationScaffolding.RelationHelper(ViewData).GetLookup();
+}
+
+@Html.Encode(lookup.SelectedObjectDisplay)

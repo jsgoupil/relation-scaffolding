@@ -1,0 +1,9 @@
+﻿@{
+    var modelMetadata = ViewData.ModelMetadata;
+    RelationScaffolding.RelationOne2OneAttribute relationAttribute = modelMetadata.ContainerType.GetMembers().FirstOrDefault(x => x.Name == modelMetadata.PropertyName).GetCustomAttributes(typeof(RelationScaffolding.RelationOne2OneAttribute), false).FirstOrDefault() as RelationScaffolding.RelationOne2OneAttribute;
+    var lookup = new RelationScaffolding.RelationHelper(ViewData).GetLookup();
+
+    ViewData.TemplateInfo.HtmlFieldPrefix = string.Empty;
+}
+
+@Html.DropDownList(modelMetadata.PropertyName, new System.Web.Mvc.SelectList((System.Collections.IEnumerable)ViewData["list"] ?? new System.Collections.ObjectModel.Collection<object>(), lookup.KeyMemberInfo.Name, lookup.DisplayMemberInfo.Name, lookup.SelectedObjectKey), relationAttribute.Empty, (object)ViewData["htmlAttributes"])
