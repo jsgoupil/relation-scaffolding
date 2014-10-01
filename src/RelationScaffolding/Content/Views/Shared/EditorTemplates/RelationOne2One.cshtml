@@ -4,6 +4,9 @@
     var lookup = new RelationScaffolding.RelationHelper(ViewData).GetLookup();
 
     ViewData.TemplateInfo.HtmlFieldPrefix = string.Empty;
+
+    // Bug with DropDownList, we must copy the value in the ViewData
+    ViewData[modelMetadata.PropertyName] = lookup.SelectedObjectKey;
 }
 
 @Html.DropDownList(modelMetadata.PropertyName, new System.Web.Mvc.SelectList((System.Collections.IEnumerable)ViewData["list"] ?? new System.Collections.ObjectModel.Collection<object>(), lookup.KeyMemberInfo.Name, lookup.DisplayMemberInfo.Name, lookup.SelectedObjectKey), relationAttribute.Empty, (object)ViewData["htmlAttributes"])

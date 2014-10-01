@@ -36,7 +36,12 @@ namespace RelationScaffolding
                     _cachedKeyMemberInfo = Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(System.ComponentModel.DataAnnotations.KeyAttribute)) != null);
                     if (_cachedKeyMemberInfo == null)
                     {
-                        throw new Exception("We couldn't find the key for your model. " + _type);
+                        // Let's try to find something that has the word Id
+                        _cachedKeyMemberInfo = Members.FirstOrDefault(m => m.MemberType != MemberTypes.Method && m.Name.EndsWith("Id", StringComparison.InvariantCultureIgnoreCase));
+                        if (_cachedKeyMemberInfo == null)
+                        {
+                            throw new Exception("We couldn't find the key for your model. " + _type);
+                        }
                     }
                 }
 
@@ -98,7 +103,7 @@ namespace RelationScaffolding
         {
             get
             {
-                return _cachedMembers ?? (_cachedMembers = _type.GetMembers(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance));
+                return _cachedMembers ?? (_cachedMembers = _type.GetMembers(BindingFlags.Public | BindingFlags.Instance));
             }
         }
     }

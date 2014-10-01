@@ -13,17 +13,19 @@
     ViewData.TemplateInfo.HtmlFieldPrefix = string.Empty;
 }
 
-<div>
-    <ul>
-        @if (data != null)
-        {
-            foreach (var relationMemberLookup in ((IEnumerable<object>)data).Select(o => new WebApplication1.Models.RelationMemberLookup(o)))
+<div class="relation" data-relation-name="@modelMetadata.PropertyName">
+    <div class="relation-list">
+        <ul>
+            @if (data != null)
             {
-                var guid = Guid.NewGuid().ToString("N");
-                <li><input type="checkbox" name="@modelMetadata.PropertyName" checked="@lookup.Any(l => Object.Equals(l.SelectedObjectKey, relationMemberLookup.SelectedObjectKey))" id="@guid" value="@Html.AttributeEncode(relationMemberLookup.SelectedObjectKey)" /><label for="@guid">@Html.Encode(relationMemberLookup.SelectedObjectDisplay)</label></li>
+                foreach (var relationMemberLookup in ((IEnumerable<object>)data).Select(o => new RelationScaffolding.RelationMemberLookup(o)))
+                {
+                    var guid = Guid.NewGuid().ToString("N");
+                    <li><input type="checkbox" name="@modelMetadata.PropertyName" checked="@lookup.Any(l => Object.Equals(l.SelectedObjectKey, relationMemberLookup.SelectedObjectKey))" id="@guid" value="@Html.AttributeEncode(relationMemberLookup.SelectedObjectKey)" /><label for="@guid">@Html.Encode(relationMemberLookup.SelectedObjectDisplay)</label></li>
+                }
             }
-        }
-    </ul>
+        </ul>
+    </div>
     <div class="relation-add">
         @if (relationAttribute.CanAdd)
         {

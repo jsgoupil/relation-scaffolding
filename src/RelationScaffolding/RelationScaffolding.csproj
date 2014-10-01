@@ -79,10 +79,13 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="RelationScaffolding.nuspec" />
-    <None Include="Views\Shared\DisplayTemplates\RelationOne2Many.cshtml" />
-    <None Include="Views\Shared\DisplayTemplates\RelationOne2One.cshtml" />
-    <None Include="Views\Shared\EditorTemplates\RelationOne2Many.cshtml" />
-    <None Include="Views\Shared\EditorTemplates\RelationOne2One.cshtml" />
+    <None Include="Content\Views\Shared\DisplayTemplates\RelationOne2Many.cshtml" />
+    <None Include="Content\Views\Shared\DisplayTemplates\RelationOne2One.cshtml" />
+    <None Include="Content\Views\Shared\EditorTemplates\RelationOne2Many.cshtml" />
+    <None Include="Content\Views\Shared\EditorTemplates\RelationOne2One.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Scripts\relation.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
