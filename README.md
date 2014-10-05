@@ -27,20 +27,20 @@ Install the JavaScript in your bundles
 
 BUndleConfig.cs
 ```c#
-    bundles.Add(new ScriptBundle("~/bundles/relation").Include(
-                "~/Scripts/relation.js",
-                "~/Scripts/site.js"));
+bundles.Add(new ScriptBundle("~/bundles/relation").Include(
+            "~/Scripts/relation.js",
+            "~/Scripts/site.js"));
 ```
 
 _Layout.cshtml
 ```cshtml
-    @Scripts.Render("~/bundles/admin")
+@Scripts.Render("~/bundles/admin")
 ```
 
 # Usage
 After everything is setup, you can name your property that you want to get a relation displayed.
 
-## Classe
+## Classes
 ```c#
 public class Book
 {
@@ -84,12 +84,12 @@ Use something like this:
 
 If you are dealing with a `RelationOne2Many`, you probably want to get the whole list of items. Use the following:
 ```cshtml
-  @Html.EditorFor(model => model.Followers, new { list = ViewBag.AllMembers, htmlAttributes = new { @class = "form-control" } })
+@Html.EditorFor(model => model.Followers, new { list = ViewBag.AllMembers, htmlAttributes = new { @class = "form-control" } })
 ```
 
 In your controller:
 ```c#
-  ViewBag.AllMembers = dbContext.Members.ToList();
+ViewBag.AllMembers = dbContext.Members.ToList();
 ```
 
 ## Controller Model Binding
