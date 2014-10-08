@@ -1,0 +1,2 @@
+To create the nuget package, run the following command:
+nuget pack RelationScaffolding.csproj

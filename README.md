@@ -79,7 +79,7 @@ Use the same code as a primite would use to generate relations.
 
 Use something like this:
 ```cshtml
-  @Html.EditorFor(model => model.Author, new { htmlAttributes = new { @class = "form-control" } })
+@Html.EditorFor(model => model.Author, new { htmlAttributes = new { @class = "form-control" } })
 ```
 
 If you are dealing with a `RelationOne2Many`, you probably want to get the whole list of items. Use the following:
