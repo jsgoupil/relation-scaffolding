@@ -9,6 +9,7 @@ namespace RelationScaffolding
         private MemberInfo[] _cachedMembers = null;
         private MemberInfo _cachedKeyMemberInfo = null;
         private MemberInfo _cachedDisplayMemberInfo = null;
+        private MemberInfo _cachedEditMemberInfo = null;
         private bool _selectedObjectKeyComputed = false;
         private object _cachedSelectedObjectKey = null;
         private bool _selectedObjectDisplayComputed = false;
@@ -60,6 +61,19 @@ namespace RelationScaffolding
                 }
 
                 return _cachedDisplayMemberInfo;
+            }
+        }
+
+        public MemberInfo EditMemberInfo
+        {
+            get
+            {
+                if (_cachedEditMemberInfo == null)
+                {
+                    _cachedEditMemberInfo = Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(RelationEditAttribute)) != null);
+                }
+
+                return _cachedEditMemberInfo;
             }
         }
 

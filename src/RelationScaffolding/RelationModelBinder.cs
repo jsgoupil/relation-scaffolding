@@ -1,36 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
 namespace RelationScaffolding
 {
-    class RelationModelBinder : IModelBinder
+    public class RelationModelBinder : DefaultModelBinder
     {
-        public virtual object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
-            ValueProviderResult valueProviderResult = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
-            object model = CreateModel(controllerContext, bindingContext, bindingContext.ModelType);
-            var relationMemberLookup = new RelationMemberLookup(model);
-            ((System.Reflection.PropertyInfo)relationMemberLookup.KeyMemberInfo).SetValue(model, valueProviderResult.AttemptedValue);
-            return model;
-        }
+            var relationMemberLookup = new RelationMemberLookup(null, bindingContext.ModelType);
+            var valueProviderResult = bindingContext.ValueProvider.GetValue(bindingContext.ModelName + "." + relationMemberLookup.KeyMemberInfo.Name);
 
-        protected virtual object CreateModel(ControllerContext controllerContext, ModelBindingContext bindingContext, Type modelType)
-        {
-            // fallback to the type's default constructor
-            Type typeToCreate = modelType;
+            if (valueProviderResult != null)
+            {
+                object finalObject = null;
 
-            try
-            {
-                return Activator.CreateInstance(typeToCreate);
+                var cache = new RelationCache(controllerContext.HttpContext);
+
+                // We don't try to find cache if the id is empty
+                if (valueProviderResult.AttemptedValue != "")
+                {
+                    // Let's try to get the same object we have returned before.
+                    finalObject = cache.Retrieve(bindingContext.ModelType, valueProviderResult.AttemptedValue);
+                }
+
+                // We couldn't find the object in the cache.
+                if (finalObject == null)
+                {
+                    finalObject = base.BindModel(controllerContext, bindingContext);
+                }
+
+                if (valueProviderResult.AttemptedValue != "")
+                {
+                    cache.Save(bindingContext.ModelType, valueProviderResult.AttemptedValue, finalObject);
+                }
+
+                return finalObject;
             }
-            catch (MissingMethodException)
-            {
-                throw;
-            }
+
+            return null;
         }
     }
 }

@@ -11,9 +11,13 @@
     }
 
     ViewData.TemplateInfo.HtmlFieldPrefix = string.Empty;
+
+    var listType = modelMetadata.ModelType.GetGenericArguments().First();
+    var listMemberLookup = new RelationScaffolding.RelationMemberLookup(null, listType);
+    var editName = listMemberLookup.EditMemberInfo == null ? "" : listMemberLookup.EditMemberInfo.Name;
 }
 
-<div class="relation" data-relation-name="@modelMetadata.PropertyName">
+<div class="relation" data-relation-name="@modelMetadata.PropertyName" data-relation-id="@listMemberLookup.KeyMemberInfo.Name" data-relation-edit="@editName">
     <div class="relation-list">
         <ul>
             @if (data != null)
@@ -23,16 +27,16 @@
                 {
                     index++;
                     var guid = Guid.NewGuid().ToString("N");
-                    <li><input type="hidden" name="@(modelMetadata.PropertyName).index" value="@index" /><input type="checkbox" name="@(modelMetadata.PropertyName)[@index]" checked="@lookup.Any(l => Object.Equals(l.SelectedObjectKey, relationMemberLookup.SelectedObjectKey))" id="@guid" value="@Html.AttributeEncode(relationMemberLookup.SelectedObjectKey)" /><label for="@guid">@Html.Encode(relationMemberLookup.SelectedObjectDisplay)</label></li>
+                    <li><input type="hidden" name="@(modelMetadata.PropertyName).index" value="@index" /><input type="checkbox" name="@(modelMetadata.PropertyName)[@index].@relationMemberLookup.KeyMemberInfo.Name" checked="@lookup.Any(l => Object.Equals(l.SelectedObjectKey, relationMemberLookup.SelectedObjectKey))" id="@guid" value="@Html.AttributeEncode(relationMemberLookup.SelectedObjectKey)" /><label for="@guid">@Html.Encode(relationMemberLookup.SelectedObjectDisplay)</label></li>
                 }
             }
         </ul>
     </div>
-    <div class="relation-add">
-        @if (relationAttribute.CanAdd)
-        {
+    @if (relationAttribute.CanAdd)
+    {
+        <div class="relation-add">
             @Html.TextBox(Guid.NewGuid().ToString("N"))
             <button type="button">Add</button>
-        }
-    </div>
+        </div>
+    }
 </div>
