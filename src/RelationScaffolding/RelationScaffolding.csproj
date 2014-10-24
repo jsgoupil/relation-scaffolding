@@ -78,6 +78,8 @@
     <Compile Include="RelationMemberLookup.cs" />
     <Compile Include="RelationModelBinder.cs" />
     <Compile Include="RelationModelBinderAttribute.cs" />
+    <Compile Include="RelationModelMetadata.cs" />
+    <Compile Include="RelationModelMetadataProvider.cs" />
     <Compile Include="RelationOne2ManyAttribute.cs" />
     <Compile Include="RelationOne2OneAttribute.cs" />
   </ItemGroup>

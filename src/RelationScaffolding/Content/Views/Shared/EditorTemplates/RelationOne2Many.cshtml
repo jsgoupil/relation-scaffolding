@@ -27,7 +27,16 @@
                 {
                     index++;
                     var guid = Guid.NewGuid().ToString("N");
-                    <li><input type="hidden" name="@(modelMetadata.PropertyName).index" value="@index" /><input type="checkbox" name="@(modelMetadata.PropertyName)[@index].@relationMemberLookup.KeyMemberInfo.Name" checked="@lookup.Any(l => Object.Equals(l.SelectedObjectKey, relationMemberLookup.SelectedObjectKey))" id="@guid" value="@Html.AttributeEncode(relationMemberLookup.SelectedObjectKey)" /><label for="@guid">@Html.Encode(relationMemberLookup.SelectedObjectDisplay)</label></li>
+                    <li>
+                        <input type="hidden" name="@(modelMetadata.PropertyName)[@index].@relationMemberLookup.KeyMemberInfo.Name" value="@Html.AttributeEncode(relationMemberLookup.SelectedObjectKey)" />
+                        @if (relationMemberLookup.EditMemberInfo != null)
+                        {
+                            <input type="hidden" name="@(modelMetadata.PropertyName)[@index].@relationMemberLookup.EditMemberInfo.Name" value="@Html.AttributeEncode(relationMemberLookup.SelectedObjectEdit)" />
+                        }
+
+                        <input type="checkbox" name="@(modelMetadata.PropertyName).index" value="@index" checked="@lookup.Any(l => Object.Equals(l.SelectedObjectKey, relationMemberLookup.SelectedObjectKey))" id="@guid" />
+                        <label for="@guid">@Html.Encode(relationMemberLookup.SelectedObjectDisplay)</label>
+                    </li>
                 }
             }
         </ul>

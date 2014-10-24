@@ -14,6 +14,8 @@ namespace RelationScaffolding
         private object _cachedSelectedObjectKey = null;
         private bool _selectedObjectDisplayComputed = false;
         private object _cachedSelectedObjectDisplay = null;
+        private bool _selectedObjectEditComputed = false;
+        private object _cachedSelectedObjectEdit = null;
         private Type _type;
         private object _obj;
 
@@ -110,6 +112,24 @@ namespace RelationScaffolding
                 }
 
                 return _cachedSelectedObjectDisplay;
+            }
+        }
+
+        public object SelectedObjectEdit
+        {
+            get
+            {
+                if (_selectedObjectEditComputed == false)
+                {
+                    if (_obj != null)
+                    {
+                        _cachedSelectedObjectEdit = ((System.Reflection.PropertyInfo)EditMemberInfo).GetValue(_obj);
+                    }
+
+                    _selectedObjectEditComputed = true;
+                }
+
+                return _cachedSelectedObjectEdit;
             }
         }
 
