@@ -70,14 +70,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RelationAttribute.cs" />
     <Compile Include="RelationCache.cs" />
     <Compile Include="RelationCollectionHelper.cs" />
     <Compile Include="RelationDisplayAttribute.cs" />
     <Compile Include="RelationEditAttribute.cs" />
     <Compile Include="RelationHelper.cs" />
     <Compile Include="RelationMemberLookup.cs" />
+    <Compile Include="InternalRelationModelBinder.cs" />
+    <Compile Include="TypeHelpers.cs" />
     <Compile Include="RelationModelBinder.cs" />
-    <Compile Include="RelationModelBinderAttribute.cs" />
     <Compile Include="RelationModelMetadata.cs" />
     <Compile Include="RelationModelMetadataProvider.cs" />
     <Compile Include="RelationOne2ManyAttribute.cs" />
