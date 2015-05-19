@@ -9,7 +9,7 @@ This package hooks up with MVC5.
 # Installation
 Run the following command
 ```
-Install-Package relation-scaffolding
+Install-Package RelationScaffolding
 ```
 
 The current package does not setup everything automatically. Please keep reading to understand
