@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RelationScaffolding", "RelationScaffolding\RelationScaffolding.csproj", "{AC248A66-50E3-43C6-9F4C-D9BF737D8BC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RelationScaffolding", "src\RelationScaffolding\RelationScaffolding.csproj", "{AC248A66-50E3-43C6-9F4C-D9BF737D8BC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RelationScaffolding.WebTests", "..\test\RelationScaffolding.WebTests\RelationScaffolding.WebTests.csproj", "{3066CCDA-1C03-4D87-8D67-2620964A1912}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RelationScaffolding.WebTests", "test\RelationScaffolding.WebTests\RelationScaffolding.WebTests.csproj", "{3066CCDA-1C03-4D87-8D67-2620964A1912}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
