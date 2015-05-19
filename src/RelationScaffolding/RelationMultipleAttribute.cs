@@ -4,14 +4,14 @@ using System.ComponentModel.DataAnnotations;
 namespace RelationScaffolding
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
-    public class RelationOne2OneAttribute : RelationAttribute
+    public class RelationMultipleAttribute : RelationAttribute 
     {
-        public RelationOne2OneAttribute()
-            : base("RelationOne2One")
+        public RelationMultipleAttribute()
+            : base("RelationMultiple")
         {
         }
 
-        public string Empty
+        public bool CanAdd
         {
             get;
             set;

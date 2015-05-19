@@ -82,16 +82,16 @@
     <Compile Include="RelationModelBinder.cs" />
     <Compile Include="RelationModelMetadata.cs" />
     <Compile Include="RelationModelMetadataProvider.cs" />
-    <Compile Include="RelationOne2ManyAttribute.cs" />
-    <Compile Include="RelationOne2OneAttribute.cs" />
+    <Compile Include="RelationMultipleAttribute.cs" />
+    <Compile Include="RelationSingleAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="RelationScaffolding.nuspec" />
-    <None Include="Content\Views\Shared\DisplayTemplates\RelationOne2Many.cshtml" />
-    <None Include="Content\Views\Shared\DisplayTemplates\RelationOne2One.cshtml" />
-    <None Include="Content\Views\Shared\EditorTemplates\RelationOne2Many.cshtml" />
-    <None Include="Content\Views\Shared\EditorTemplates\RelationOne2One.cshtml" />
+    <None Include="Content\Views\Shared\DisplayTemplates\RelationMultiple.cshtml" />
+    <None Include="Content\Views\Shared\DisplayTemplates\RelationSingle.cshtml" />
+    <None Include="Content\Views\Shared\EditorTemplates\RelationMultiple.cshtml" />
+    <None Include="Content\Views\Shared\EditorTemplates\RelationSingle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\Scripts\relation.js" />

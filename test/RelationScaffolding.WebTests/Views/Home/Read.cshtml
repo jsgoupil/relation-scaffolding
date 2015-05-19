@@ -1,0 +1,31 @@
+﻿@model RelationScaffolding.WebTests.Models.ViewModel
+@{
+    ViewBag.Title = "Read";
+}
+
+<h2>Read</h2>
+<a href="@Url.Action("Write")">Switch</a>
+
+<h3>Teacher</h3>
+<div>
+    Name: @Html.DisplayFor(m => m.Teacher.Name)
+</div>
+<div>
+    Courses: @Html.DisplayFor(m => m.Teacher.Courses)
+</div>
+
+<h3>Course</h3>
+<div>
+    Name: @Html.DisplayFor(m => m.Course.Title)
+</div>
+<div>
+    Teacher: @Html.DisplayFor(m => m.Course.Teacher)
+</div>
+
+<h3>Student</h3>
+<div>
+    Name: @Html.DisplayFor(m => m.Student.Name)
+</div>
+<div>
+    Teacher: @Html.DisplayFor(m => m.Student.Enrollments)
+</div>

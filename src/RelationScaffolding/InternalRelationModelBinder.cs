@@ -7,7 +7,7 @@ namespace RelationScaffolding
         public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
             var relationMemberLookup = new RelationMemberLookup(null, bindingContext.ModelType);
-            var valueProviderResult = bindingContext.ValueProvider.GetValue(bindingContext.ModelName + "." + relationMemberLookup.KeyMemberInfo.Name);
+            var valueProviderResult = bindingContext.ValueProvider.GetValue(bindingContext.ModelName + "." + relationMemberLookup.KeyMember.MemberInfo.Name);
 
             if (valueProviderResult != null)
             {

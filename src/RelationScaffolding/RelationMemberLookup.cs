@@ -7,15 +7,9 @@ namespace RelationScaffolding
     public class RelationMemberLookup
     {
         private MemberInfo[] _cachedMembers = null;
-        private MemberInfo _cachedKeyMemberInfo = null;
-        private MemberInfo _cachedDisplayMemberInfo = null;
-        private MemberInfo _cachedEditMemberInfo = null;
-        private bool _selectedObjectKeyComputed = false;
-        private object _cachedSelectedObjectKey = null;
-        private bool _selectedObjectDisplayComputed = false;
-        private object _cachedSelectedObjectDisplay = null;
-        private bool _selectedObjectEditComputed = false;
-        private object _cachedSelectedObjectEdit = null;
+        private MemberData _cachedKeyMember = null;
+        private MemberData _cachedDisplayMember = null;
+        private MemberData _cachedEditMember = null;
         private Type _type;
         private object _obj;
 
@@ -30,106 +24,70 @@ namespace RelationScaffolding
             _type = type;
         }
 
-        public MemberInfo KeyMemberInfo
+        public MemberData KeyMember
         {
             get
             {
-                if (_cachedKeyMemberInfo == null)
+                if (_cachedKeyMember == null)
                 {
-                    _cachedKeyMemberInfo = Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(System.ComponentModel.DataAnnotations.KeyAttribute)) != null);
-                    if (_cachedKeyMemberInfo == null)
+                    var memberInfo = Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(System.ComponentModel.DataAnnotations.KeyAttribute)) != null);
+                    if (memberInfo == null)
                     {
                         // Let's try to find something that has the word Id
-                        _cachedKeyMemberInfo = Members.FirstOrDefault(m => m.MemberType != MemberTypes.Method && m.Name.EndsWith("Id", StringComparison.InvariantCultureIgnoreCase));
-                        if (_cachedKeyMemberInfo == null)
+                        memberInfo = Members.FirstOrDefault(m => m.MemberType != MemberTypes.Method && m.Name.EndsWith("Id", StringComparison.InvariantCultureIgnoreCase));
+                        if (memberInfo == null)
                         {
                             throw new Exception("We couldn't find the key for your model. " + _type);
                         }
                     }
+
+                    _cachedKeyMember = new MemberData(memberInfo, _obj);
                 }
 
-                return _cachedKeyMemberInfo;
+                return _cachedKeyMember;
             }
         }
 
-        public MemberInfo DisplayMemberInfo
+        public MemberData DisplayMember
         {
             get
             {
-                if (_cachedDisplayMemberInfo == null)
+                if (_cachedDisplayMember == null)
                 {
-                    _cachedDisplayMemberInfo = Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(RelationDisplayAttribute)) != null);
-                    _cachedDisplayMemberInfo = _cachedDisplayMemberInfo ?? KeyMemberInfo;
-                }
-
-                return _cachedDisplayMemberInfo;
-            }
-        }
-
-        public MemberInfo EditMemberInfo
-        {
-            get
-            {
-                if (_cachedEditMemberInfo == null)
-                {
-                    _cachedEditMemberInfo = Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(RelationEditAttribute)) != null);
-                }
-
-                return _cachedEditMemberInfo;
-            }
-        }
-
-        public object SelectedObjectKey
-        {
-            get
-            {
-                if (_selectedObjectKeyComputed == false)
-                {
-                    if (_obj != null)
+                    var lookup = this;
+                    while (lookup != null)
                     {
-                        _cachedSelectedObjectKey = ((System.Reflection.PropertyInfo)KeyMemberInfo).GetValue(_obj);
+                        var memberInfo = lookup.Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(RelationDisplayAttribute)) != null);
+                        if (memberInfo == null)
+                        {
+                            break;
+                        }
+                        
+                        var propertyInfo = memberInfo as PropertyInfo;
+
+                        _cachedDisplayMember = new MemberData(memberInfo, lookup._obj);
+                        var value = propertyInfo.GetValue(lookup._obj);
+                        lookup = new RelationMemberLookup(value, propertyInfo.PropertyType);
                     }
 
-                    _selectedObjectKeyComputed = true;
+                    _cachedDisplayMember = _cachedDisplayMember ?? KeyMember;
                 }
 
-                return _cachedSelectedObjectKey;
+                return _cachedDisplayMember;
             }
         }
 
-        public object SelectedObjectDisplay
+        public MemberData EditMember
         {
             get
             {
-                if (_selectedObjectDisplayComputed == false)
+                if (_cachedEditMember == null)
                 {
-                    if (_obj != null)
-                    {
-                        _cachedSelectedObjectDisplay = ((System.Reflection.PropertyInfo)DisplayMemberInfo).GetValue(_obj);
-                    }
-
-                    _selectedObjectDisplayComputed = true;
+                    var memberInfo = Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(RelationEditAttribute)) != null);
+                    _cachedEditMember = new MemberData(memberInfo, _obj);
                 }
 
-                return _cachedSelectedObjectDisplay;
-            }
-        }
-
-        public object SelectedObjectEdit
-        {
-            get
-            {
-                if (_selectedObjectEditComputed == false)
-                {
-                    if (_obj != null)
-                    {
-                        _cachedSelectedObjectEdit = ((System.Reflection.PropertyInfo)EditMemberInfo).GetValue(_obj);
-                    }
-
-                    _selectedObjectEditComputed = true;
-                }
-
-                return _cachedSelectedObjectEdit;
+                return _cachedEditMember;
             }
         }
 
@@ -138,6 +96,42 @@ namespace RelationScaffolding
             get
             {
                 return _cachedMembers ?? (_cachedMembers = _type.GetMembers(BindingFlags.Public | BindingFlags.Instance));
+            }
+        }
+    }
+
+    public class MemberData
+    {
+        private MemberInfo _memberInfo;
+        private object _obj;
+        private object _cachedValue;
+        private bool _computedValue;
+
+        public MemberData(MemberInfo memberInfo, object obj)
+        {
+            _memberInfo = memberInfo;
+            _obj = obj;
+            _cachedValue = null;
+        }
+        public MemberInfo MemberInfo
+        {
+            get
+            {
+                return _memberInfo;
+            }
+        }
+
+        public object Value
+        {
+            get
+            {
+                if (_obj != null && _computedValue == false)
+                {
+                    _cachedValue = (MemberInfo as PropertyInfo).GetValue(_obj);
+                    _computedValue = true;
+                }
+
+                return _cachedValue;
             }
         }
     }

@@ -1,0 +1,12 @@
+﻿@{
+    var modelMetadata = ViewData.ModelMetadata;
+    RelationScaffolding.RelationMultipleAttribute relationAttribute = modelMetadata.ContainerType.GetMembers().FirstOrDefault(x => x.Name == modelMetadata.PropertyName).GetCustomAttributes(typeof(RelationScaffolding.RelationSingleAttribute), false).FirstOrDefault() as RelationScaffolding.RelationMultipleAttribute;
+    var lookup = new RelationScaffolding.RelationCollectionHelper(ViewData).GetLookup();
+}
+
+<ul>
+    @foreach (var relationMemberLookup in lookup)
+    {
+        <li>@relationMemberLookup.DisplayMember.Value</li>
+    }
+</ul>
