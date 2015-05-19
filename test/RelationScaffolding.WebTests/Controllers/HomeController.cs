@@ -162,7 +162,7 @@ namespace RelationScaffolding.WebTests.Controllers
             return new Teacher
             {
                 Id = id,
-                Name = "Hello",
+                Name = "Teacher 1",
                 Courses = new List<Course>
                 {
                     new Course

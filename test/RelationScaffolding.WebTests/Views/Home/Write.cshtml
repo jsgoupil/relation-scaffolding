@@ -19,7 +19,7 @@
     Name: @Html.EditorFor(m => m.Course.Title)
 </div>
 <div>
-    Teacher: @Html.EditorFor(m => m.Course.Teacher, new { List = Model.AvailableTeachers })
+    Teacher: @Html.EditorFor(m => m.Course.Teacher, new { List = Model.AvailableTeachers, ShortcutProperty = true })
 </div>
 
 <h3>Student</h3>
