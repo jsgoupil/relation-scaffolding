@@ -18,7 +18,7 @@
                         "<input type='hidden' name='" + name + "[" + idName + "]." + id + "' value='' />" +
                         "<input type='hidden' name='" + name + "[" + idName + "]." + edit + "' />" +
                         "<input type='checkbox' checked='checked' id='" + idName + "' name='" + name + ".index' value='" + idName + "' />" +
-                        "<label for='" + idName + "'>" + textbox.val() + "</label>" +
+                        " <label for='" + idName + "'>" + textbox.val() + "</label>" +
                     "</li>");
                 item.find("input[type=hidden]:eq(1)").val(textbox.val());
                 container.append(item);

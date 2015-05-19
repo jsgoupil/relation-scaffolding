@@ -27,5 +27,13 @@
     Name: @Html.DisplayFor(m => m.Student.Name)
 </div>
 <div>
-    Teacher: @Html.DisplayFor(m => m.Student.Enrollments)
+    Enrollments: @Html.DisplayFor(m => m.Student.Enrollments)
+</div>
+
+<h3>Enrollment</h3>
+<div>
+    Course: @Html.DisplayFor(m => m.Enrollment.Course)
+</div>
+<div>
+    Student: @Html.DisplayFor(m => m.Enrollment.Student)
 </div>

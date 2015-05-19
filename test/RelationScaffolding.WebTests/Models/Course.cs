@@ -10,10 +10,11 @@ namespace RelationScaffolding.WebTests.Models
         public int Id { get; set; }
 
         [RelationScaffolding.RelationDisplay]
+        [RelationScaffolding.RelationEdit]
         public string Title { get; set; }
         public int TeacherId { get; set; }
 
-        [RelationScaffolding.RelationSingle]
+        [RelationScaffolding.RelationSingle(Empty = "Select a teacher.")]
         public virtual Teacher Teacher { get; set; }
     }
 }

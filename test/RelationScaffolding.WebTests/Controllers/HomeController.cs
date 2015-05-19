@@ -26,10 +26,34 @@ namespace RelationScaffolding.WebTests.Controllers
             return new ViewModel
             {
                 Teacher = GetTeacher(),
-                AvailableCourses = GetAvailableCourses(),
                 Course = GetCourse(),
+                Student = GetStudent(),
+                Enrollment = GetEnrollment(),
+                AvailableCourses = GetAvailableCourses(),
                 AvailableTeachers = GetAvailableTeachers(),
-                Student = GetStudent()
+                AvailableStudents = GetAvailableStudents()
+            };
+        }
+
+        private Enrollment GetEnrollment()
+        {
+            var courseId = 1;
+            var studentId = 2;
+            return new Enrollment
+            {
+                Identification = 1,
+                CourseId = courseId,
+                Course = new Course
+                {
+                    Id = courseId,
+                    Title = "Course 1"
+                },
+                StudentId = studentId,
+                Student = new Student
+                {
+                    Id = studentId,
+                    Name = "Student 2"
+                }
             };
         }
 
@@ -56,22 +80,26 @@ namespace RelationScaffolding.WebTests.Controllers
                         Course = GetAvailableCourses().First(m => m.Id == 2),
                         StudentId = id
                     }
-                }
+                }.ToArray()
             };
         }
 
-        /*
-        private ICollection<Enrollment> GetAvailableEnrollments()
+        private ICollection<Student> GetAvailableStudents()
         {
-            return new List<Enrollment>
+            return new List<Student>
             {
-                new Enrollment
+                new Student
                 {
-                    Identification = 1,
-
-                }
+                    Id = 1,
+                    Name = "Student 1"
+                },
+                new Student
+                {
+                    Id = 2,
+                    Name = "Student 2"
+                },
             };
-        }*/
+        }
 
         private ICollection<Teacher> GetAvailableTeachers()
         {

@@ -6,9 +6,9 @@ using System.Text;
 
 namespace RelationScaffolding
 {
-    public abstract class RelationAttribute : UIHintAttribute
+    public class RelationAttribute : UIHintAttribute
     {
-        public RelationAttribute(string uiHint)
+        public RelationAttribute(string uiHint = "Relation")
             : base(uiHint)
         {
         }

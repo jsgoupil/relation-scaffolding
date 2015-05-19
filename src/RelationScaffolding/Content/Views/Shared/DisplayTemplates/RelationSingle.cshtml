@@ -1,6 +1,5 @@
 ﻿@{
     var modelMetadata = ViewData.ModelMetadata;
-    RelationScaffolding.RelationSingleAttribute relationAttribute = modelMetadata.ContainerType.GetMembers().FirstOrDefault(x => x.Name == modelMetadata.PropertyName).GetCustomAttributes(typeof(RelationScaffolding.RelationSingleAttribute), false).FirstOrDefault() as RelationScaffolding.RelationSingleAttribute;
     var lookup = new RelationScaffolding.RelationHelper(ViewData).GetLookup();
 }
 

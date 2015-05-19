@@ -7,7 +7,7 @@ namespace RelationScaffolding.WebTests.Models
 {
     public class Student : Person
     {
-        [RelationScaffolding.RelationMultiple]
+        [RelationScaffolding.Relation]
         public virtual ICollection<Enrollment> Enrollments { get; set; }
     }
 }

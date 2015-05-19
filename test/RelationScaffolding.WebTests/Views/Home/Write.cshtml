@@ -27,5 +27,13 @@
     Name: @Html.EditorFor(m => m.Student.Name)
 </div>
 <div>
-    Teacher: @Html.EditorFor(m => m.Student.Enrollments)
+    Enrollments: @Html.EditorFor(m => m.Student.Enrollments)
+</div>
+
+<h3>Enrollment</h3>
+<div>
+    Course: @Html.EditorFor(m => m.Enrollment.Course, new { List = Model.AvailableCourses })
+</div>
+<div>
+    Student: @Html.EditorFor(m => m.Enrollment.Student, new { List = Model.AvailableStudents })
 </div>

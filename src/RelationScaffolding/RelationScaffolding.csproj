@@ -86,6 +86,8 @@
     <Compile Include="RelationSingleAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\Views\Shared\DisplayTemplates\Relation.cshtml" />
+    <None Include="Content\Views\Shared\EditorTemplates\Relation.cshtml" />
     <None Include="packages.config" />
     <None Include="RelationScaffolding.nuspec" />
     <None Include="Content\Views\Shared\DisplayTemplates\RelationMultiple.cshtml" />

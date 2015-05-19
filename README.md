@@ -1,8 +1,8 @@
 relation-scaffolding
 ====================
 
-Relation dependencies in EntityFramework is common taks.
-This package will create a select box, or checkboxes depending if you have a One2One or One2Many relationship.
+Relation dependencies in EntityFramework is common task.
+This package will create a select box, or checkboxes depending if you have a Single or Multiple relationship.
 
 This package hooks up with MVC5.
 
@@ -19,22 +19,21 @@ The package will install the following:
  * DLL reference
  * Templates in /Views/Shared/[EditorTemplates|DisplayTemplates]
    * Feel free to modify those templates to your needs, note that this project is in beta and those files will most likely be updated later
-   * If you use this inside an Area, you do not need to move those files. They will be picked up automatically.
+   * If you use this inside an Area, you do not need to move these files. They will be picked up automatically.
  * One JavaScript file /Scripts/relation.js
 
 ## Manual Steps
 Install the JavaScript in your bundles
 
-BUndleConfig.cs
+BundleConfig.cs
 ```c#
 bundles.Add(new ScriptBundle("~/bundles/relation").Include(
-            "~/Scripts/relation.js",
-            "~/Scripts/site.js"));
+            "~/Scripts/relation.js"));
 ```
 
 _Layout.cshtml
 ```cshtml
-@Scripts.Render("~/bundles/admin")
+@Scripts.Render("~/bundles/relation")
 ```
 
 # Usage
@@ -50,10 +49,10 @@ public class Book
     [Required]
     public string Name { get; set; }
 
-    [RelationScaffolding.RelationOne2One(Empty = "")]
+    [RelationScaffolding.RelationSingle(Empty = "Select an author")]
     public Member Author { get; set; }
 
-    [RelationScaffolding.RelationOne2Many]
+    [RelationScaffolding.RelationMultiple]
     public virtual ICollection<Member> Followers { get; set; }
 }
 ```
@@ -73,6 +72,15 @@ public class Member
 
 If you do not set the `[Key]` attribute, we try to find a property that ends with `Id`.
 
+Definition of the attributes:
+
+1. `RelationSingle`: will display a single property in display mode or a combo box in edit mode. Use the `Empty` option to pre-fill the combo box with a default string value.
+2. `RelationMultiple`: will display an unordered list in display mode or an unordered checkbox list in edit mode. Use the `CanAdd` option to add a textbox allowing addition to the list.
+3. `Relation`: will use the `RelationMultiple` or `RelationSingle` accordingly if the property is an array or not.
+4. `RelationDisplay`: indicates which property to use when displayed in `RelationSingle` or `RelationMultiple`. You can combine this attribute with the attribute [NotMapped] if you want to add a computed property.
+5. `RelationEdit`: indicates which property will be used when using the `CanAdd` from `RelationMultiple`.
+
+
 ## View
 The current scaffolding is not automatically populating the view for relations.
 Use the same code as a primite would use to generate relations.
@@ -82,7 +90,7 @@ Use something like this:
 @Html.EditorFor(model => model.Author, new { htmlAttributes = new { @class = "form-control" } })
 ```
 
-If you are dealing with a `RelationOne2Many`, you probably want to get the whole list of items. Use the following:
+If you are dealing with a `Multiple`, you probably want to get the whole list of items. Use the following:
 ```cshtml
 @Html.EditorFor(model => model.Followers, new { list = ViewBag.AllMembers, htmlAttributes = new { @class = "form-control" } })
 ```

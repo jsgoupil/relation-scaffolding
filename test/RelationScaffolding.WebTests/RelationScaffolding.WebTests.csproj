@@ -102,6 +102,12 @@
     <LinkedItem Include="..\..\src\RelationScaffolding\Content\Views\Shared\EditorTemplates\RelationSingle.cshtml">
       <Link>Views\Shared\EditorTemplates\RelationSingle.cshtml</Link>
     </LinkedItem>
+    <LinkedItem Include="..\..\src\RelationScaffolding\Content\Views\Shared\DisplayTemplates\Relation.cshtml">
+      <Link>Views\Shared\DisplayTemplates\Relation.cshtml</Link>
+    </LinkedItem>
+    <LinkedItem Include="..\..\src\RelationScaffolding\Content\Views\Shared\EditorTemplates\Relation.cshtml">
+      <Link>Views\Shared\EditorTemplates\Relation.cshtml</Link>
+    </LinkedItem>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

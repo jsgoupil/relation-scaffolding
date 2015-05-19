@@ -12,7 +12,7 @@
 
     ViewData.TemplateInfo.HtmlFieldPrefix = string.Empty;
 
-    var listType = modelMetadata.ModelType.GetGenericArguments().First();
+    var listType = modelMetadata.ModelType.GetGenericArguments().FirstOrDefault() ?? modelMetadata.ModelType.GetElementType();
     var listMemberLookup = new RelationScaffolding.RelationMemberLookup(null, listType);
     var editName = listMemberLookup.EditMember == null || listMemberLookup.EditMember.MemberInfo == null ? "" : listMemberLookup.EditMember.MemberInfo.Name;
 }
@@ -41,7 +41,7 @@
             }
         </ul>
     </div>
-    @if (relationAttribute.CanAdd)
+    @if (relationAttribute != null && relationAttribute.CanAdd)
     {
         <div class="relation-add">
             @Html.TextBox(Guid.NewGuid().ToString("N"))

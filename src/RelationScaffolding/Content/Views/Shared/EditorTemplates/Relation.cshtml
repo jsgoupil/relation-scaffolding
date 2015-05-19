@@ -1,0 +1,22 @@
+﻿@using System.Linq;
+
+@functions {
+    public bool IsEnumerable(Type type)
+    {
+        return type.GetInterfaces()
+                .Any(ti => ti.IsGenericType
+                     && ti.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+    }
+}
+
+@{
+    var modelMetadata = ViewData.ModelMetadata;
+    if (IsEnumerable(modelMetadata.ModelType))
+    {
+        @Html.Partial("~/Views/Shared/EditorTemplates/RelationMultiple.cshtml")
+    }
+    else
+    {
+        @Html.Partial("~/Views/Shared/EditorTemplates/RelationSingle.cshtml")
+    }
+}
