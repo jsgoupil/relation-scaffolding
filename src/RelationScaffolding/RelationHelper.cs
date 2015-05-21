@@ -1,4 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
+using System.Linq;
 
 namespace RelationScaffolding
 {
@@ -20,6 +23,23 @@ namespace RelationScaffolding
             }
 
             return _cachedRelationMemberLookup;
+        }
+
+        public static TResult GetCustomAttributesFromContainer<TResult>(Type container, string memberName)
+        {
+            var customAttribute = container.GetMembers().FirstOrDefault(x => x.Name == memberName).GetCustomAttributes(typeof(TResult), true).OfType<TResult>().FirstOrDefault();
+
+            if (customAttribute == null)
+            {
+                // Check the metadata type
+                var metadataType = container.GetCustomAttributes(typeof(MetadataTypeAttribute), true).OfType<MetadataTypeAttribute>().FirstOrDefault();
+                if (metadataType != null)
+                {
+                    return GetCustomAttributesFromContainer<TResult>(metadataType.MetadataClassType, memberName);
+                }
+            }
+
+            return customAttribute;
         }
     }
 }

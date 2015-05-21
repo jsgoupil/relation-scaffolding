@@ -16,5 +16,11 @@ namespace RelationScaffolding
             get;
             set;
         }
+
+        public string PropertyName
+        {
+            get;
+            set;
+        }
     }
 }

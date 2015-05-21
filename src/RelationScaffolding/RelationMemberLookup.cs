@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
@@ -7,6 +8,9 @@ namespace RelationScaffolding
     public class RelationMemberLookup
     {
         private MemberInfo[] _cachedMembers = null;
+        private MemberInfo[] _cachedMetadataMembers = null;
+        private bool _metadataMembersComputed = false;
+
         private MemberData _cachedKeyMember = null;
         private MemberData _cachedDisplayMember = null;
         private MemberData _cachedEditMember = null;
@@ -30,18 +34,22 @@ namespace RelationScaffolding
             {
                 if (_cachedKeyMember == null)
                 {
-                    var memberInfo = Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(System.ComponentModel.DataAnnotations.KeyAttribute)) != null);
-                    if (memberInfo == null)
+                    var memberData = GetMemberDataFromCustomAttribute(this, typeof(System.ComponentModel.DataAnnotations.KeyAttribute), _obj);
+                    if (memberData == null)
                     {
                         // Let's try to find something that has the word Id
-                        memberInfo = Members.FirstOrDefault(m => m.MemberType != MemberTypes.Method && m.Name.EndsWith("Id", StringComparison.InvariantCultureIgnoreCase));
+                        var memberInfo = Members.FirstOrDefault(m => m.MemberType != MemberTypes.Method && m.Name.EndsWith("Id", StringComparison.InvariantCultureIgnoreCase));
                         if (memberInfo == null)
                         {
                             throw new Exception("We couldn't find the key for your model. " + _type);
                         }
-                    }
 
-                    _cachedKeyMember = new MemberData(memberInfo, _obj);
+                        _cachedKeyMember = new MemberData(memberInfo, null, _obj);
+                    }
+                    else
+                    {
+                        _cachedKeyMember = memberData;
+                    }
                 }
 
                 return _cachedKeyMember;
@@ -57,17 +65,23 @@ namespace RelationScaffolding
                     var lookup = this;
                     while (lookup != null)
                     {
-                        var memberInfo = lookup.Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(RelationDisplayAttribute)) != null);
-                        if (memberInfo == null)
+                        var memberData = GetMemberDataFromCustomAttribute(lookup, typeof(RelationDisplayAttribute), lookup._obj);
+                        if (memberData == null)
                         {
                             break;
                         }
-                        
-                        var propertyInfo = memberInfo as PropertyInfo;
 
-                        _cachedDisplayMember = new MemberData(memberInfo, lookup._obj);
-                        var value = propertyInfo.GetValue(lookup._obj);
-                        lookup = new RelationMemberLookup(value, propertyInfo.PropertyType);
+                        _cachedDisplayMember = memberData;
+
+                        if (lookup._obj != null)
+                        {
+                            var value = memberData.Value;
+                            lookup = new RelationMemberLookup(value, (memberData.MemberInfo as PropertyInfo).PropertyType);
+                        }
+                        else
+                        {
+                            lookup = null;
+                        }
                     }
 
                     _cachedDisplayMember = _cachedDisplayMember ?? KeyMember;
@@ -83,12 +97,35 @@ namespace RelationScaffolding
             {
                 if (_cachedEditMember == null)
                 {
-                    var memberInfo = Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == typeof(RelationEditAttribute)) != null);
-                    _cachedEditMember = new MemberData(memberInfo, _obj);
+                    var memberData = GetMemberDataFromCustomAttribute(this, typeof(RelationEditAttribute), _obj);
+                    _cachedEditMember = memberData;
                 }
 
                 return _cachedEditMember;
             }
+        }
+
+        private MemberData GetMemberDataFromCustomAttribute(RelationMemberLookup lookup, Type attribute, object obj)
+        {
+            var memberInfo = lookup.Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == attribute) != null);
+            if (memberInfo == null)
+            {
+                if (lookup.MetadataMembers != null)
+                {
+                    memberInfo = lookup.MetadataMembers.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == attribute) != null);
+                    if (memberInfo != null)
+                    {
+                        var metadataMemberInfo = memberInfo;
+                        memberInfo = lookup.Members.FirstOrDefault(m => m.Name == metadataMemberInfo.Name);
+
+                        return new MemberData(memberInfo, metadataMemberInfo, obj);
+                    }
+                }
+
+                return null;
+            }
+
+            return new MemberData(memberInfo, null, obj);
         }
 
         private MemberInfo[] Members
@@ -98,26 +135,48 @@ namespace RelationScaffolding
                 return _cachedMembers ?? (_cachedMembers = _type.GetMembers(BindingFlags.Public | BindingFlags.Instance));
             }
         }
+
+        private MemberInfo[] MetadataMembers
+        {
+            get
+            {
+                if (!_metadataMembersComputed)
+                {
+                    var metadataType = _type.GetCustomAttributes(typeof(MetadataTypeAttribute), true).OfType<MetadataTypeAttribute>().FirstOrDefault();
+                    if (metadataType != null)
+                    {
+                        _cachedMetadataMembers = metadataType.MetadataClassType.GetMembers(BindingFlags.Public | BindingFlags.Instance);
+                    }
+
+                    _metadataMembersComputed = true;
+                }
+
+                return _cachedMetadataMembers;
+            }
+        }
     }
 
     public class MemberData
     {
         private MemberInfo _memberInfo;
+        private MemberInfo _metadataMemberInfo;
         private object _obj;
         private object _cachedValue;
         private bool _computedValue;
 
-        public MemberData(MemberInfo memberInfo, object obj)
+        public MemberData(MemberInfo memberInfo, MemberInfo metadataMemberInfo, object obj)
         {
             _memberInfo = memberInfo;
+            _metadataMemberInfo = metadataMemberInfo;
             _obj = obj;
             _cachedValue = null;
         }
+
         public MemberInfo MemberInfo
         {
             get
             {
-                return _memberInfo;
+                return _metadataMemberInfo ?? _memberInfo;
             }
         }
 
@@ -127,7 +186,7 @@ namespace RelationScaffolding
             {
                 if (_obj != null && _computedValue == false)
                 {
-                    _cachedValue = (MemberInfo as PropertyInfo).GetValue(_obj);
+                    _cachedValue = (_memberInfo as PropertyInfo).GetValue(_obj);
                     _computedValue = true;
                 }
 

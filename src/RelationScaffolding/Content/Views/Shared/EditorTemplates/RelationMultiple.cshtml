@@ -2,7 +2,7 @@
 
 @{
     var modelMetadata = ViewData.ModelMetadata;
-    RelationScaffolding.RelationMultipleAttribute relationAttribute = modelMetadata.ContainerType.GetMembers().FirstOrDefault(x => x.Name == modelMetadata.PropertyName).GetCustomAttributes(typeof(RelationScaffolding.RelationMultipleAttribute), false).FirstOrDefault() as RelationScaffolding.RelationMultipleAttribute;
+    RelationScaffolding.RelationMultipleAttribute relationAttribute = RelationScaffolding.RelationHelper.GetCustomAttributesFromContainer<RelationScaffolding.RelationMultipleAttribute>(modelMetadata.ContainerType, modelMetadata.PropertyName);
     var lookup = new RelationScaffolding.RelationCollectionHelper(ViewData).GetLookup();
     var data = ViewData["list"];
     if (data == null)
