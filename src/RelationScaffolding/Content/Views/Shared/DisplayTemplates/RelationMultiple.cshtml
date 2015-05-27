@@ -6,6 +6,6 @@
 <ul>
     @foreach (var relationMemberLookup in lookup)
     {
-        <li>@relationMemberLookup.DisplayMember.Value</li>
+        <li data-relation-key="@Html.AttributeEncode(relationMemberLookup.KeyMember.Value)">@relationMemberLookup.DisplayMember.Value</li>
     }
 </ul>

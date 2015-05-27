@@ -27,7 +27,7 @@
                 {
                     index++;
                     var guid = Guid.NewGuid().ToString("N");
-                    <li>
+                    <li data-relation-key="@Html.AttributeEncode(relationMemberLookup.KeyMember.Value)">
                         <input type="hidden" name="@(modelMetadata.PropertyName)[@index].@relationMemberLookup.KeyMember.MemberInfo.Name" value="@Html.AttributeEncode(relationMemberLookup.KeyMember.Value)" />
                         @if (relationMemberLookup.EditMember != null && relationMemberLookup.EditMember.MemberInfo != null)
                         {
