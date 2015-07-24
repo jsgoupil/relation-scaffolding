@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
@@ -14,6 +15,7 @@ namespace RelationScaffolding
         private MemberData _cachedKeyMember = null;
         private MemberData _cachedDisplayMember = null;
         private MemberData _cachedEditMember = null;
+        private IEnumerable<MemberData> _cachedListMembers = null;
         private Type _type;
         private object _obj;
 
@@ -91,6 +93,20 @@ namespace RelationScaffolding
             }
         }
 
+        public IEnumerable<MemberData> List
+        {
+            get
+            {
+                if (_cachedListMembers == null)
+                {
+                    var memberData = GetMemberDatasFromCustomAttribute(this, typeof(RelationListAttribute), _obj);
+                    _cachedListMembers = memberData;
+                }
+
+                return _cachedListMembers;
+            }
+        }
+
         public MemberData EditMember
         {
             get
@@ -107,25 +123,31 @@ namespace RelationScaffolding
 
         private MemberData GetMemberDataFromCustomAttribute(RelationMemberLookup lookup, Type attribute, object obj)
         {
-            var memberInfo = lookup.Members.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == attribute) != null);
-            if (memberInfo == null)
+            return GetMemberDatasFromCustomAttribute(lookup, attribute, obj).FirstOrDefault();
+        }
+
+        private IEnumerable<MemberData> GetMemberDatasFromCustomAttribute(RelationMemberLookup lookup, Type attribute, object obj)
+        {
+            var memberInfos = lookup.Members.Where(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == attribute) != null);
+            if (memberInfos.Count() == 0)
             {
                 if (lookup.MetadataMembers != null)
                 {
-                    memberInfo = lookup.MetadataMembers.FirstOrDefault(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == attribute) != null);
-                    if (memberInfo != null)
+                    memberInfos = lookup.MetadataMembers.Where(m => m.CustomAttributes.FirstOrDefault(c => c.AttributeType == attribute) != null);
+                    if (memberInfos.Count() > 0)
                     {
-                        var metadataMemberInfo = memberInfo;
-                        memberInfo = lookup.Members.FirstOrDefault(m => m.Name == metadataMemberInfo.Name);
-
-                        return new MemberData(memberInfo, metadataMemberInfo, obj);
+                        return memberInfos.Select(m =>
+                        {
+                            var memberInfo = lookup.Members.FirstOrDefault(x => x.Name == m.Name);
+                            return new MemberData(memberInfo, m, obj);
+                        });
                     }
                 }
 
-                return null;
+                return new MemberData[0];
             }
 
-            return new MemberData(memberInfo, null, obj);
+            return memberInfos.Select(m => new MemberData(m, null, obj));
         }
 
         private MemberInfo[] Members

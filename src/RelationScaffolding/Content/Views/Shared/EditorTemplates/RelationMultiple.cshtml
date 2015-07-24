@@ -15,9 +15,32 @@
     var listType = modelMetadata.ModelType.GetGenericArguments().FirstOrDefault() ?? modelMetadata.ModelType.GetElementType();
     var listMemberLookup = new RelationScaffolding.RelationMemberLookup(null, listType);
     var editName = listMemberLookup.EditMember == null || listMemberLookup.EditMember.MemberInfo == null ? "" : listMemberLookup.EditMember.MemberInfo.Name;
+    var many2ManyActivated = relationAttribute != null && relationAttribute.Many2Many;
 }
 
 <div class="relation" data-relation-name="@modelMetadata.PropertyName" data-relation-id="@listMemberLookup.KeyMember.MemberInfo.Name" data-relation-edit="@editName">
+    @if (many2ManyActivated)
+    {
+        <div class="relation-multiple">
+            @foreach (var memberData in listMemberLookup.List)
+            {
+                var viewDataList = memberData.MemberInfo.Name + "List";
+                
+                if (ViewData[viewDataList] != null)
+                {
+                    RelationScaffolding.RelationListAttribute relationListAttribute = RelationScaffolding.RelationHelper.GetCustomAttributesFromContainer<RelationScaffolding.RelationListAttribute>(memberData.MemberInfo.DeclaringType, memberData.MemberInfo.Name);
+                    var subLookup = new RelationScaffolding.RelationMemberLookup(((IEnumerable<object>)ViewData[viewDataList]).FirstOrDefault());
+                    var propertyName = relationListAttribute.PropertyName ?? memberData.MemberInfo.Name + "." + subLookup.KeyMember.MemberInfo.Name;
+                    <span class="relation-list" data-relation-id="@propertyName">
+                        @Html.DropDownList(viewDataList, new System.Web.Mvc.SelectList((System.Collections.IEnumerable)ViewData[viewDataList] ?? new System.Collections.ObjectModel.Collection<object>(), subLookup.KeyMember.MemberInfo.Name, subLookup.DisplayMember.MemberInfo.Name), null, (object)ViewData["htmlAttributes"])
+                    </span>
+                }
+            }
+
+            <button type="button">Add</button>
+        </div>
+    }
+  
     <div class="relation-list">
         <ul>
             @if (data != null)
@@ -34,13 +57,21 @@
                             <input type="hidden" name="@(modelMetadata.PropertyName)[@index].@relationMemberLookup.EditMember.MemberInfo.Name" value="@Html.AttributeEncode(relationMemberLookup.EditMember.Value)" />
                         }
 
-                        <input type="checkbox" name="@(modelMetadata.PropertyName).index" value="@index" checked="@lookup.Any(l => Object.Equals(l.KeyMember.Value, relationMemberLookup.KeyMember.Value))" id="@guid" />
+                        @{var typeBox = "checkbox";}
+                        @if (many2ManyActivated)
+                        {
+                            typeBox = "hidden";
+                            <text><a href="javascript:;" data-relation-delete="true">X</a></text>
+                        }
+
+                        <input type="@typeBox" name="@(modelMetadata.PropertyName).index" value="@index" checked="@lookup.Any(l => Object.Equals(l.KeyMember.Value, relationMemberLookup.KeyMember.Value))" id="@guid" />
                         <label for="@guid">@Html.Encode(relationMemberLookup.DisplayMember.Value)</label>
                     </li>
                 }
             }
         </ul>
     </div>
+
     @if (relationAttribute != null && relationAttribute.CanAdd)
     {
         <div class="relation-add">

@@ -9,5 +9,8 @@ namespace RelationScaffolding.WebTests.Models
     {
         [RelationScaffolding.RelationMultiple(CanAdd = true)] // Will add to the course under the RelationEdit
         public virtual ICollection<Course> Courses { get; set; }
+
+        [RelationScaffolding.RelationMultiple(Many2Many = true)]
+        public virtual ICollection<ActivityTeachers> ActivityTeachers { get; set; }
     }
 }

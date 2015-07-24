@@ -31,7 +31,8 @@ namespace RelationScaffolding.WebTests.Controllers
                 Enrollment = GetEnrollment(),
                 AvailableCourses = GetAvailableCourses(),
                 AvailableTeachers = GetAvailableTeachers(),
-                AvailableStudents = GetAvailableStudents()
+                AvailableStudents = GetAvailableStudents(),
+                AvailableActivities = GetAvailableActivities()
             };
         }
 
@@ -140,6 +141,38 @@ namespace RelationScaffolding.WebTests.Controllers
             };
         }
 
+        private ICollection<Activity> GetAvailableActivities()
+        {
+            return new List<Activity>
+            {
+                new Activity
+                {
+                    Id = 1,
+                    Name = "Activity 1"
+                },
+                new Activity
+                {
+                    Id = 2,
+                    Name = "Activity 2"
+                },
+                new Activity
+                {
+                    Id = 3,
+                    Name = "Activity 3"
+                },
+                new Activity
+                {
+                    Id = 4,
+                    Name = "Activity 4"
+                },
+                new Activity
+                {
+                    Id = 5,
+                    Name = "Activity 5"
+                }
+            };
+        }
+
         private Course GetCourse()
         {
             var teacherId = 2;
@@ -176,6 +209,23 @@ namespace RelationScaffolding.WebTests.Controllers
                         Id = 2,
                         TeacherId = id,
                         Title = "Course 2"
+                    }
+                },
+                ActivityTeachers = new List<ActivityTeachers>
+                {
+                    new ActivityTeachers
+                    {
+                        Id = 1,
+                        RegistrationCode = "Reg#1",
+                        TeacherId = id,
+                        ActivityId = GetAvailableActivities().Skip(1).First().Id
+                    },
+                    new ActivityTeachers
+                    {
+                        Id = 2,
+                        RegistrationCode = "Reg#2",
+                        TeacherId = id,
+                        ActivityId = GetAvailableActivities().Skip(3).First().Id
                     }
                 }
             };

@@ -14,5 +14,6 @@ namespace RelationScaffolding.WebTests.Models
         public ICollection<Course> AvailableCourses { get; set; }
         public ICollection<Teacher> AvailableTeachers { get; set; }
         public ICollection<Student> AvailableStudents { get; set; }
+        public ICollection<Activity> AvailableActivities { get; set; }
     }
 }

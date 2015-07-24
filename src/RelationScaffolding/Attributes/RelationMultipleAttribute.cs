@@ -16,5 +16,11 @@ namespace RelationScaffolding
             get;
             set;
         }
+
+        public bool Many2Many
+        {
+            get;
+            set;
+        }
     }
 }

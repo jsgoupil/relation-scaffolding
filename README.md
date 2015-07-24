@@ -75,10 +75,11 @@ If you do not set the `[Key]` attribute, we try to find a property that ends wit
 Definition of the attributes:
 
 1. `RelationSingle`: will display a single property in display mode or a combo box in edit mode. Use the `Empty` option to pre-fill the combo box with a default string value.
-2. `RelationMultiple`: will display an unordered list in display mode or an unordered checkbox list in edit mode. Use the `CanAdd` option to add a textbox allowing addition to the list.
+2. `RelationMultiple`: will display an unordered list in display mode or an unordered checkbox list in edit mode. Use the `CanAdd` option to add a textbox allowing addition to the list. Use the `Many2Many` option to tell that the collection is a joint table.
 3. `Relation`: will use the `RelationMultiple` or `RelationSingle` accordingly if the property is an array or not.
 4. `RelationDisplay`: indicates which property to use when displayed in `RelationSingle` or `RelationMultiple`. You can combine this attribute with the attribute [NotMapped] if you want to add a computed property.
 5. `RelationEdit`: indicates which property will be used when using the `CanAdd` from `RelationMultiple`.
+6. `RelationList`: indicates which property will be used as a list for a Many2Many joint table. Use the "PropertyNameList" in your cshtml to populate the whole list of item.
 
 
 ## View
@@ -93,6 +94,11 @@ Use something like this:
 If you are dealing with a `Multiple`, you probably want to get the whole list of items. Use the following:
 ```cshtml
 @Html.EditorFor(model => model.Followers, new { list = ViewBag.AllMembers, htmlAttributes = new { @class = "form-control" } })
+```
+
+If you are using `Many2Many`, you can assign the list to the variable name "`FieldName`List".
+```cshtml
+@Html.EditorFor(model => model.Followers, new { PersonList = ViewBag.AllMembers, htmlAttributes = new { @class = "form-control" } })
 ```
 
 In your controller:

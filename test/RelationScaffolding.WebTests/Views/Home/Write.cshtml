@@ -13,6 +13,9 @@
 <div>
     Courses: @Html.EditorFor(m => m.Teacher.Courses, new { List = Model.AvailableCourses })
 </div>
+<div>
+    Activities: @Html.EditorFor(m => m.Teacher.ActivityTeachers, new { ActivityList = Model.AvailableActivities, TeacherList = Model.AvailableTeachers })
+</div>
 
 <h3>Course</h3>
 <div>

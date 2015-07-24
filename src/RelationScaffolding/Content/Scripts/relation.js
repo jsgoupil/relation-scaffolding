@@ -31,4 +31,38 @@
                 evt.preventDefault();
             }
         });
+
+    $("body")
+        .on("click", ".relation-multiple button", function () {
+            var parent = $(this).closest(".relation"),
+                relationMultiple = $(this).closest(".relation-multiple"),
+                relationList = relationMultiple.find(".relation-list"),
+                container = parent.find(".relation-list ul"),
+                name = parent.data("relation-name"),
+                idName = name + "_add" + counter;
+            counter++;
+
+            var content = "";
+            var label = [];
+            relationList.each(function (i, r) {
+                var $r = $(r);
+                var id = $r.data('relation-id');
+                var select = $r.find("select");
+                content += "<input type='hidden' name='" + name + "[" + idName + "]." + id + "' value='" + select.val() + "' />" ;
+                label.push(select.children("option").filter(":selected").text());
+            });
+
+            var item = $("<li>" +
+                    content +
+                    "<a href='javascript:;' data-relation-delete='true'>X</a>" +
+                    "<input type='hidden' id='" + idName + "' name='" + name + ".index' value='" + idName + "' />" +
+                    " <label for='" + idName + "'>" + label.join(" - ") + "</label>" +
+                "</li>");
+            container.append(item);
+        })
+        .on("click", ".relation [data-relation-delete]", function () {
+            var parent = $(this).closest("li");
+
+            parent.remove();
+        });
 })(jQuery);
