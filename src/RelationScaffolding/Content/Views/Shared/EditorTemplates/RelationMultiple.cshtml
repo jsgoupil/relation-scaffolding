@@ -65,7 +65,7 @@
                         }
 
                         <input type="@typeBox" name="@(modelMetadata.PropertyName).index" value="@index" checked="@lookup.Any(l => Object.Equals(l.KeyMember.Value, relationMemberLookup.KeyMember.Value))" id="@guid" />
-                        <label for="@guid">@Html.Encode(relationMemberLookup.DisplayMember.Value)</label>
+                        <label for="@guid">@relationMemberLookup.DisplayMember.Value</label>
                     </li>
                 }
             }

@@ -3,4 +3,4 @@
     var lookup = new RelationScaffolding.RelationHelper(ViewData).GetLookup();
 }
 
-@Html.Encode(lookup.DisplayMember.Value)
+@lookup.DisplayMember.Value
